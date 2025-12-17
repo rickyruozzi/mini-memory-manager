@@ -51,4 +51,4 @@ void memory_free(void *ptr){
         /*to_free è un puntatore a blocco che punta all'header, aggiungendo la dimensione del blocco otteniamo l'inizio dello spazio allocato */
         //PROBLEMA: si crea frammentazione con l'implementazione attuale, questo ci impedisce anche di deallocare l'header perchè altrimenti perderemmo qualsiasi riferimento allo spazio allocato precedentemente
     } //non è di per sé necessario liberare la memoria perchè alla prossima allocazione i dati comunque verrebbero sovrascritti
-}
+} 
