@@ -57,3 +57,5 @@ void memory_free(void *ptr){
         //PROBLEMA: si crea frammentazione con l'implementazione attuale, questo ci impedisce anche di deallocare l'header perchè altrimenti perderemmo qualsiasi riferimento allo spazio allocato precedentemente
     } //non è di per sé necessario liberare la memoria perchè alla prossima allocazione i dati comunque verrebbero sovrascritti
 } 
+
+//TODO: eliminare il campo data, è ovvio che per come è impostato il MM l'area dati segua il blocco, continuare ad usare que puntatore rischia di generare bug inutili e dannosi
