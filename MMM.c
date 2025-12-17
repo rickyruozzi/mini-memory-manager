@@ -10,20 +10,25 @@ void init_memory(){
 
 void split_block(block* b, size_t size){
     if(b->size> size + sizeof(block)){ //controlliamo di avere abbastanza spazio per lo split
-        block *newBlock = (block*)malloc(sizeof(block)); //allochiamo lo spazio per un nuovo blocco
-        unsigned char* newData = b->data + size; //creazione dell'area di memoria
-        newBlock->size = b->size-size - sizeof(block);  
-        newBlock->next = NULL;
-        newBlock->data = newData; //puntatore all'inizio dell'area dati in RAM
-        newBlock -> free = 1;
+        block* newBlock = (block*)((byte*)b + sizeof(block) + size);
+        //allochiamo lo spazio per un nuovo blocco
+        /*Il nuovo blocco avrà come area assegnata inizio di b + dimensione del blocco + dimensione dell'area allocata*/
+        byte* newData = b->data + size + sizeof(block); //creazione del puntatore che referenzierà l'inizio dell'area dati del blocco
+        newBlock->size = b->size- size - sizeof(block);   
+        //la dimensione del nuovo blocco che farà da tail sarà la dimensione che aveva b prima - la dimensione da allocare - la dimensione che useremo per il nuovo blocco header
+        newBlock->next = NULL; //il puntatore al prossimo nodo viene inizializzato a NULL
+        newBlock->data = newData; //visto che la dimensione del blocco è fissa possiamo calcolare l'inizio dell'area dati del blocco successivo come il vecchio inizio + la dimensione
+        newBlock -> free = 1; //settiamo il blocco come libero
 
-        b->size=size; //impostiamo la dimensione del blocco sullo spazio che abbiamo specificato 
-        b->free=0;
-        b->next = newBlock;
+        b->size=size; //la dimensione dell'area dati del blocco b diverrà quella richiesta dall'utente
+        b->free=0; //il blocco verrà impostato come occupato
+        b->next = newBlock; //il campo next referenzierà il nuovo blocco di coda
     }
     else{
-        b->free=0;
-    }
+        b->free=0; //se non c'è abbastanza spazio impostiamo il blocco come occupato per indicare l'impossibilità di usarlo
+    } 
+    /*se non è la prima volta che allochiamo il blocco finiremo qua e setteremo il blocco 
+    semplicemente su occupato per riusarlo*/
 }
 
 void* memory_alloc(size_t size){
@@ -32,7 +37,7 @@ void* memory_alloc(size_t size){
     }
     block *current = head; //inizializziamo un blocco current 
     while(current != NULL){ //finché non arriviamo al primo NUL della catena
-        if(current->free==1 && current ->size>=size){ //se il blocco è libero (free=1) e la dimensione è sufficiente
+        if(current->free==1 && current ->size>=size){ //se il blocco è libero (free=1) e la dimensione è sufficiente (first-fit)
             split_block(current, size); //splittiamo il blocco
             return (void*)((byte*)current+sizeof(block)); //restituiamo il puntatore allo spazio allocato, quindi dall'indirizzo di inizio blocco + la dimensione del blocco
         }

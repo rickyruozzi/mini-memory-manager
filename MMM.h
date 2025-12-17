@@ -7,14 +7,15 @@
 
 #define RAM_SIZE 1024*1024 //simuliamo una ram da 10 mb
 
+typedef unsigned char byte; 
+
 typedef struct block{
     size_t size; //dimensione del blocco 
     struct block *next; //puntatore al prossimo blocco
     int free; // 1 se libero, 0 se occupato
-    unsigned char* data; // punta all'inizio della memoria dati
+    byte* data; // punta all'inizio della memoria dati
 } block;
 
-typedef unsigned char byte; 
 byte ram[RAM_SIZE];
 block *head = NULL;
 
