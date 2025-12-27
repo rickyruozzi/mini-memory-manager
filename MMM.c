@@ -103,6 +103,7 @@ void memory_stats(){
     free_memory = 0;
     used_memory = 0;
     total_blocks = 0;
+    //inizializzazioni
 
     while(current !=NULL){
         total_blocks++; 
@@ -113,10 +114,12 @@ void memory_stats(){
             used_memory += current->size; 
         }
     }
+    //calcolo delle statistiche
     printf("Memory Statistics:\n");
     printf("Total Blocks: %zu\n", total_blocks);
     printf("Used Memory: %zu bytes\n", used_memory);
     printf("Free Memory: %zu bytes\n", free_memory);
+    //stampa delle statistiche
 }
 
 void memory_check_integrity(){ 
@@ -126,10 +129,10 @@ void memory_check_integrity(){
         total_size += sizeof(block) + current->size;  
         current = current->next; 
     }
-    if(total_size != RAM_SIZE){
+    if(total_size != RAM_SIZE){ //se la dimensione totale calcolata non corrisponde alla dimensione della RAM
         printf("Memory integrity check failed! Total size mismatch.\n");
     }
-    else{
+    else{ //se la dimensione totale corrisponde alla dimensione della RAM
         printf("Memory integrity check passed! Total size matches RAM size.\n");
     }
 }
