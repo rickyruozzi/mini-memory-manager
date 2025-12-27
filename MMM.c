@@ -118,3 +118,18 @@ void memory_stats(){
     printf("Used Memory: %zu bytes\n", used_memory);
     printf("Free Memory: %zu bytes\n", free_memory);
 }
+
+void memory_check_integrity(){ 
+    block *current = head; 
+    size_t total_size = 0;
+    while(current != NULL){
+        total_size += sizeof(block) + current->size;  
+        current = current->next; 
+    }
+    if(total_size != RAM_SIZE){
+        printf("Memory integrity check failed! Total size mismatch.\n");
+    }
+    else{
+        printf("Memory integrity check passed! Total size matches RAM size.\n");
+    }
+}
