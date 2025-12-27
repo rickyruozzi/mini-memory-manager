@@ -32,4 +32,11 @@ typedef struct memory_block{
     unsigned char *start; //blocco iniziale della RAM
 } memory_block;
 
+// Prototipi delle funzioni
+void init_memory();
+void split_block(block* b, size_t size);
+void* memory_alloc(size_t size);
+void memory_free(void *ptr);
+void* memory_realloc(void *ptr, size_t new_size);
+
 #endif

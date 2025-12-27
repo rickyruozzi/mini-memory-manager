@@ -58,4 +58,25 @@ void memory_free(void *ptr){
     } //non è di per sé necessario liberare la memoria perchè alla prossima allocazione i dati comunque verrebbero sovrascritti
 } 
 
-//TODO: eliminare il campo data, è ovvio che per come è impostato il MM l'area dati segua il blocco, continuare ad usare que puntatore rischia di generare bug inutili e dannosi
+void* memory_realloc(void *ptr, size_t new_size){
+    if(ptr==NULL){
+        return memory_alloc(new_size); //se il puntatore è nullo allochiamo nuovo spazio
+    }
+    block *current_block = (block*)((byte*)ptr - sizeof(block));
+    //otteniamo il blocco header sottraendo la dimensione del blocco al puntatore
+    //Il puntatore punta all'inizio dell'area dati, sottraendo la dimensione del blocco otteniamo l'inizio del blocco header
+    if(current_block->size >= new_size){
+        split_block(current_block, new_size); //se la dimensione attuale è sufficiente splittiamo il blocco per adattarlo alla nuova dimensione
+        return ptr; //restituiamo lo stesso puntatore perchè l'area dai rimane invariata
+    }
+    else{
+        void* new_ptr = memory_alloc(new_size); //allochiamo un nuovo spazio di dimensione new_size
+        if(new_ptr != NULL){
+            memcpy(new_ptr, ptr, current_block->size); 
+            //copiamo il contenuto dell'area puntata da ptr nel nuovo spazio allocato
+            memory_free(ptr); //liberiamo la vecchia area di memoria
+            return new_ptr; //restituiamo il nuovo puntatore
+        }
+    }
+}
+
