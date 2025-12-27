@@ -80,3 +80,17 @@ void* memory_realloc(void *ptr, size_t new_size){
     }
 }
 
+void merge_free_blocks(){
+    block* current = head;
+    while(current != NULL && current->next != NULL){
+        if(current->free == 1 && current->next->free == 1){
+            current->size = current->size + sizeof(block) + current->next->size;
+            //Aggiorniamo la dimenione del blocco
+            current->next = current->next->next; //aggiorniamo il puntatore al prossimo blocco
+        }
+        else{
+            current = current->next; //scorriamo il blocco
+        }
+        //dentro all'else perchè potremmo avere più blocchi liberi consecutivi
+    }
+}
