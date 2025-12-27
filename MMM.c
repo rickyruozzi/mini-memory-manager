@@ -94,3 +94,27 @@ void merge_free_blocks(){
         //dentro all'else perchè potremmo avere più blocchi liberi consecutivi
     }
 }
+
+void memory_stats(){
+    block *current = head; 
+    size_t free_memory; 
+    size_t used_memory; 
+    size_t total_blocks; 
+    free_memory = 0;
+    used_memory = 0;
+    total_blocks = 0;
+
+    while(current !=NULL){
+        total_blocks++; 
+        if(current->free == 1){
+            free_memory += current->size;
+        }
+        else{
+            used_memory += current->size; 
+        }
+    }
+    printf("Memory Statistics:\n");
+    printf("Total Blocks: %zu\n", total_blocks);
+    printf("Used Memory: %zu bytes\n", used_memory);
+    printf("Free Memory: %zu bytes\n", free_memory);
+}
